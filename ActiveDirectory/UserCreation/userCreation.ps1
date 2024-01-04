@@ -17,5 +17,7 @@ foreach ($user in $userlist) {
 		EmailAddress = ($user.firstName[0] + $user.lastName + '@contoso.org').ToLower()
 		Department = $user.department
 		PasswordNeverExpired = $False
-	
+		
+	}
+	New-ADUser @splat
 }
