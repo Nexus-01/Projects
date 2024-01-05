@@ -21,3 +21,8 @@ foreach ($user in $userlist) {
 	}
 	New-ADUser @splat
 }
+
+
+# TODO:
+#	Generate a report of the users created.
+#	Read basic information from each created user and direct the output to a json file. This can aid in viewing specific attributes without the need for powershell commands. This will also help in later scripts.
