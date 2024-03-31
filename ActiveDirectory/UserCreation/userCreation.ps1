@@ -4,6 +4,7 @@ import-module ActiveDirectory
 # import the .csv file to raed from to create users and assign to the variable $userlist
 $userlist = Import-Csv -Path C:\Users\testAdmin\usersTest.csv
 
+
 # loops through each line in the userlist
 foreach ($user in $userlist) {
 	# create a splat to pass multiple parameters in a single object for ease of readability
@@ -16,8 +17,21 @@ foreach ($user in $userlist) {
 		AccountPassword = (Read-Host -AsSecureString 'AccountPassword')
 		EmailAddress = ($user.firstName[0] + $user.lastName + '@contoso.org').ToLower()
 		Department = $user.department
-		PasswordNeverExpired = $False
+		PasswordNeverExpires = $False
 		
 	}
-	New-ADUser @splat
+	# check if user by username already exists, create if not
+	try {
+    		Get-ADUser -Identity $(($user.firstName[0]+$user.lastName).toLower())
+    		Write-Host "User $(($user.firstName[0]+$user.lastName).toLower()) already exists. Continuing..." -ForegroundColor Red
+	}
+	catch [Microsoft.ActiveDirectory.Management.ADIdentityResolutionException] {
+    		Write-Host "User does not exist. Creating..." -ForegroundColor Green
+    		New-ADUser @splat
+		Write-Host "User $($user.firstName[0]+$user.lastName) created." -ForegroundColor Green
+		Write-Host "" # newline
+	}
+
 }
+Write-Host "Script Finished." -Foreground Cyan
+
