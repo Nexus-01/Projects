@@ -22,13 +22,13 @@ foreach ($user in $userlist) {
 	}
 	# check if user by username already exists, create if not
 	try {
-    		Get-ADUser -Identity $(($user.firstName[0]+$user.lastName).toLower())
-    		Write-Host "User $(($user.firstName[0]+$user.lastName).toLower()) already exists. Continuing..." -ForegroundColor Red
+    		Get-ADUser -Identity $($splat["SamAccountName"])
+    		Write-Host "User $($splat["SamAccountName"]) already exists. Continuing..." -ForegroundColor Red
 	}
 	catch [Microsoft.ActiveDirectory.Management.ADIdentityResolutionException] {
     		Write-Host "User does not exist. Creating..." -ForegroundColor Green
     		New-ADUser @splat
-		Write-Host "User $($user.firstName[0]+$user.lastName) created." -ForegroundColor Green
+		Write-Host "User $($splat["SamAccountName"]) created." -ForegroundColor Green
 		Write-Host "" # newline
 	}
 
